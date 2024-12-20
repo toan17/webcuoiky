@@ -10,81 +10,84 @@ import Header from "../../components/Header";
 import { tokens } from "../../theme";
 
 const initialValues = {
-    username: "",
-    email: "",
-    role: ""
+    centerName: "",
+    address: "",
+    phoneNumber: "",
+    email: ""
 };
 
 const validationSchema = yup.object({
-    username: yup.string().required("Required"),
-    email: yup.string().email("Invalid email format").required("Required"),
-    role: yup.string().required("Required")
+    centerName: yup.string().required("Required"),
+    address: yup.string().required("Required"),
+    phoneNumber: yup.string().required("Required"),
+    email: yup.string().email("Invalid email format").required("Required")
 });
 
-const initialAccounts = [
-    { id: 1, username: "user1", email: "user1@example.com", role: "admin" },
-    { id: 2, username: "user2", email: "user2@example.com", role: "user" },
-    { id: 3, username: "user3", email: "user3@example.com", role: "user" },
-    { id: 4, username: "user4", email: "user4@example.com", role: "user" },
-    { id: 5, username: "user5", email: "user5@example.com", role: "user" },
-    { id: 6, username: "user6", email: "user6@example.com", role: "user" },
-    { id: 7, username: "user7", email: "user7@example.com", role: "user" },
-    { id: 8, username: "user8", email: "user8@example.com", role: "user" }
+const initialCenters = [
+    { id: 1, centerName: "Trung tâm đăng kiểm A", address: "123 Đường A, Quận 1, TP.HCM", phoneNumber: "0123456789", email: "a@example.com" },
+    { id: 2, centerName: "Trung tâm đăng kiểm B", address: "456 Đường B, Quận 2, TP.HCM", phoneNumber: "0987654321", email: "b@example.com" },
+    { id: 3, centerName: "Trung tâm đăng kiểm C", address: "789 Đường C, Quận 3, TP.HCM", phoneNumber: "0123456780", email: "c@example.com" },
+    { id: 4, centerName: "Trung tâm đăng kiểm D", address: "101 Đường D, Quận 4, TP.HCM", phoneNumber: "0987654320", email: "d@example.com" },
+    { id: 5, centerName: "Trung tâm đăng kiểm E", address: "112 Đường E, Quận 5, TP.HCM", phoneNumber: "0123456781", email: "e@example.com" },
+    { id: 6, centerName: "Trung tâm đăng kiểm F", address: "131 Đường F, Quận 6, TP.HCM", phoneNumber: "0987654322", email: "f@example.com" },
+    { id: 7, centerName: "Trung tâm đăng kiểm G", address: "415 Đường G, Quận 7, TP.HCM", phoneNumber: "0123456782", email: "g@example.com" },
+    { id: 8, centerName: "Trung tâm đăng kiểm H", address: "161 Đường H, Quận 8, TP.HCM", phoneNumber: "0987654323", email: "h@example.com" }
 ];
 
-const AccountManagement = () => {
+const RegistryCenterManagement = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-    const [accounts, setAccounts] = useState(initialAccounts);
+    const [centers, setCenters] = useState(initialCenters);
     const [open, setOpen] = useState(false);
-    const [editAccount, setEditAccount] = useState(null);
-    const [deleteAccount, setDeleteAccount] = useState(null);
+    const [editCenter, setEditCenter] = useState(null);
+    const [deleteCenter, setDeleteCenter] = useState(null);
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [pageSize, setPageSize] = useState(10);
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
-        setEditAccount(null);
+        setEditCenter(null);
     };
 
-    const handleConfirmOpen = (account) => {
-        setDeleteAccount(account);
+    const handleConfirmOpen = (center) => {
+        setDeleteCenter(center);
         setConfirmOpen(true);
     };
 
     const handleConfirmClose = () => {
         setConfirmOpen(false);
-        setDeleteAccount(null);
+        setDeleteCenter(null);
     };
 
     const handleFormSubmit = (values) => {
-        if (editAccount) {
-            setAccounts(accounts.map(acc => acc.id === editAccount.id ? { ...acc, ...values } : acc));
-            toast.success("Cập nhật tài khoản thành công");
+        if (editCenter) {
+            setCenters(centers.map(center => center.id === editCenter.id ? { ...center, ...values } : center));
+            toast.success("Cập nhật trung tâm đăng kiểm thành công");
         } else {
-            setAccounts([...accounts, { id: accounts.length + 1, ...values }]);
-            toast.success("Thêm tài khoản thành công");
+            setCenters([...centers, { id: centers.length + 1, ...values }]);
+            toast.success("Thêm trung tâm đăng kiểm thành công");
         }
         handleClose();
     };
 
-    const handleEdit = (account) => {
-        setEditAccount(account);
+    const handleEdit = (center) => {
+        setEditCenter(center);
         handleOpen();
     };
 
     const handleDelete = () => {
-        setAccounts(accounts.filter(acc => acc.id !== deleteAccount.id));
-        toast.success("Xóa tài khoản thành công");
+        setCenters(centers.filter(center => center.id !== deleteCenter.id));
+        toast.success("Xóa trung tâm đăng kiểm thành công");
         handleConfirmClose();
     };
 
     const columns = [
         { field: "id", headerName: "ID", flex: 1 },
-        { field: "username", headerName: "Tên tài khoản", flex: 2 },
-        { field: "email", headerName: "Email", flex: 3 },
-        { field: "role", headerName: "Vai trò", flex: 2 },
+        { field: "centerName", headerName: "Tên trung tâm", flex: 2 },
+        { field: "address", headerName: "Địa chỉ", flex: 3 },
+        { field: "phoneNumber", headerName: "Số điện thoại", flex: 2 },
+        { field: "email", headerName: "Email", flex: 2 },
         {
             field: "actions",
             headerName: "Hành động",
@@ -125,8 +128,8 @@ const AccountManagement = () => {
 
     return (
         <Box m="20px">
-            <Header title="Quản lý tài khoản" subtitle="Danh sách tài khoản" />
-            <Button variant="contained" color="primary" onClick={handleOpen} sx={{ mb: 2 }}>Thêm tài khoản</Button>
+            <Header title="Quản lý trung tâm đăng kiểm" subtitle="Danh sách trung tâm đăng kiểm" />
+            <Button variant="contained" color="primary" onClick={handleOpen} sx={{ mb: 2 }}>Thêm trung tâm</Button>
             <Box
                 height="75vh"
                 sx={{
@@ -156,7 +159,7 @@ const AccountManagement = () => {
                 }}
             >
                 <DataGrid
-                    rows={accounts}
+                    rows={centers}
                     columns={columns}
                     pageSize={pageSize}
                     onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
@@ -169,10 +172,10 @@ const AccountManagement = () => {
             </Box>
 
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>{editAccount ? "Sửa tài khoản" : "Thêm tài khoản"}</DialogTitle>
+                <DialogTitle>{editCenter ? "Sửa trung tâm đăng kiểm" : "Thêm trung tâm đăng kiểm"}</DialogTitle>
                 <DialogContent>
                     <Formik
-                        initialValues={editAccount || initialValues}
+                        initialValues={editCenter || initialValues}
                         validationSchema={validationSchema}
                         onSubmit={handleFormSubmit}
                     >
@@ -180,12 +183,30 @@ const AccountManagement = () => {
                             <Form>
                                 <Field
                                     as={TextField}
-                                    name="username"
-                                    label="Tên tài khoản"
+                                    name="centerName"
+                                    label="Tên trung tâm"
                                     fullWidth
                                     margin="normal"
-                                    error={touched.username && !!errors.username}
-                                    helperText={touched.username && errors.username}
+                                    error={touched.centerName && !!errors.centerName}
+                                    helperText={touched.centerName && errors.centerName}
+                                />
+                                <Field
+                                    as={TextField}
+                                    name="address"
+                                    label="Địa chỉ"
+                                    fullWidth
+                                    margin="normal"
+                                    error={touched.address && !!errors.address}
+                                    helperText={touched.address && errors.address}
+                                />
+                                <Field
+                                    as={TextField}
+                                    name="phoneNumber"
+                                    label="Số điện thoại"
+                                    fullWidth
+                                    margin="normal"
+                                    error={touched.phoneNumber && !!errors.phoneNumber}
+                                    helperText={touched.phoneNumber && errors.phoneNumber}
                                 />
                                 <Field
                                     as={TextField}
@@ -196,18 +217,9 @@ const AccountManagement = () => {
                                     error={touched.email && !!errors.email}
                                     helperText={touched.email && errors.email}
                                 />
-                                <Field
-                                    as={TextField}
-                                    name="role"
-                                    label="Vai trò"
-                                    fullWidth
-                                    margin="normal"
-                                    error={touched.role && !!errors.role}
-                                    helperText={touched.role && errors.role}
-                                />
                                 <DialogActions>
                                     <Button onClick={handleClose} color="secondary">Hủy</Button>
-                                    <Button type="submit" sx={{ backgroundColor: 'green', color: 'white' }}>{editAccount ? "Cập nhật" : "Thêm"}</Button>
+                                    <Button type="submit" sx={{ backgroundColor: 'green', color: 'white' }}>{editCenter ? "Cập nhật" : "Thêm"}</Button>
                                 </DialogActions>
                             </Form>
                         )}
@@ -218,7 +230,7 @@ const AccountManagement = () => {
             <Dialog open={confirmOpen} onClose={handleConfirmClose}>
                 <DialogTitle>Xác nhận xóa</DialogTitle>
                 <DialogContent>
-                    <Typography>Bạn có chắc chắn muốn xóa tài khoản này?</Typography>
+                    <Typography>Bạn có chắc chắn muốn xóa trung tâm đăng kiểm này?</Typography>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleConfirmClose} color="secondary">Hủy</Button>
@@ -229,4 +241,4 @@ const AccountManagement = () => {
     );
 };
 
-export default AccountManagement;
+export default RegistryCenterManagement;

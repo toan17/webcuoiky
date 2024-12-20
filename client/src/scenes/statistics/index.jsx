@@ -1,24 +1,31 @@
-import {
-    Typography,
-    Box,
-    useTheme,
-    Select,
-    MenuItem,
-    Button,
-    IconButton,
-} from "@mui/material";
+import { Box, useTheme, Select, MenuItem } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import Header from "../../components/Header";
-import LineChart from "../../components/LineChart";
 import { tokens } from "../../theme";
 import { useState } from "react";
 import { mockRegistry } from "../../data/mockData";
-import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import DataCard from "../../components/DataCard";
+import PieChart from "../../components/PieChart";
+import { ResponsiveBar } from "@nivo/bar";
+
+const data = [
+    { month: "JAN", value: 120 },
+    { month: "FEB", value: 200 },
+    { month: "MAR", value: 150 },
+    { month: "APR", value: 220 },
+    { month: "MAY", value: 300 },
+    { month: "JUN", value: 250 },
+    { month: "JUL", value: 180 },
+    { month: "AUG", value: 280 },
+    { month: "SEP", value: 320 },
+    { month: "OCT", value: 350 },
+    { month: "NOV", value: 400 },
+    { month: "DEC", value: 420 },
+];
 
 function Statistics() {
     const theme = useTheme();
-    const colors = tokens(theme.palette.mode);
+    const themeTokens = tokens(theme.palette.mode);
     const [time, setTime] = useState();
     const [center, setCenter] = useState("all");
     const [line, setLine] = useState(0);
@@ -51,7 +58,7 @@ function Statistics() {
                         <MenuItem disabled value={-1}>
                             <em>Khoảng thời gian: </em>
                         </MenuItem>
-                        <MenuItem value={0}>All time</MenuItem>
+                        <MenuItem value={0}>Thời gian: All time</MenuItem>
                         <MenuItem value={1}>Quý I</MenuItem>
                         <MenuItem value={2}>Quý II</MenuItem>
                         <MenuItem value={3}>Quý III</MenuItem>
@@ -67,13 +74,13 @@ function Statistics() {
                         }}
                         label="Trung tâm"
                         InputLabelProps={{
-                            sx: { color: colors.grey[800] },
+                            sx: { color: themeTokens.grey[800] },
                         }}
                     >
                         <MenuItem disabled value="">
                             <em>Trung tâm: </em>
                         </MenuItem>
-                        <MenuItem value={"all"}>All</MenuItem>
+                        <MenuItem value={"all"}>Trung tâm: All</MenuItem>
                         {mockRegistry.map((item) => (
                             <MenuItem key={item.center} value={item.center}>
                                 {item.center}
@@ -93,10 +100,11 @@ function Statistics() {
                         <MenuItem disabled value={-1}>
                             <em>Dây chuyền: </em>
                         </MenuItem>
-                        <MenuItem value={0}>All</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={21}>Twenty one</MenuItem>
-                        <MenuItem value={22}>Twenty one and a half</MenuItem>
+                        <MenuItem value={0}>Dây chuyền: All</MenuItem>
+                        <MenuItem value={20}>Dây chuyền Hà Đông</MenuItem>
+                        <MenuItem value={21}>Dây chuyền Đống Đa</MenuItem>
+                        <MenuItem value={22}>Dây chuyền Đông Anh</MenuItem>
+                        <MenuItem value={22}>Dây chuyền Long Biên</MenuItem>
                     </Select>
                 </Box>
 
@@ -104,7 +112,7 @@ function Statistics() {
                     <Grid container xs={12} md={6}>
                         <Grid xs={6} md={4}>
                             <Box
-                                backgroundColor={colors.primary[400]}
+                                backgroundColor={themeTokens.primary[400]}
                                 display="flex"
                                 alignItems="center"
                                 justifyContent="center"
@@ -116,7 +124,7 @@ function Statistics() {
 
                         <Grid xs={6} md={4}>
                             <Box
-                                backgroundColor={colors.primary[400]}
+                                backgroundColor={themeTokens.primary[400]}
                                 display="flex"
                                 alignItems="center"
                                 justifyContent="center"
@@ -128,7 +136,7 @@ function Statistics() {
 
                         <Grid xs={6} md={4}>
                             <Box
-                                backgroundColor={colors.primary[400]}
+                                backgroundColor={themeTokens.primary[400]}
                                 display="flex"
                                 alignItems="center"
                                 justifyContent="center"
@@ -140,7 +148,7 @@ function Statistics() {
 
                         <Grid xs={6} md={4}>
                             <Box
-                                backgroundColor={colors.primary[400]}
+                                backgroundColor={themeTokens.primary[400]}
                                 display="flex"
                                 alignItems="center"
                                 justifyContent="center"
@@ -152,7 +160,7 @@ function Statistics() {
 
                         <Grid xs={6} md={4}>
                             <Box
-                                backgroundColor={colors.primary[400]}
+                                backgroundColor={themeTokens.primary[400]}
                                 display="flex"
                                 alignItems="center"
                                 justifyContent="center"
@@ -164,7 +172,7 @@ function Statistics() {
 
                         <Grid xs={6} md={4}>
                             <Box
-                                backgroundColor={colors.primary[400]}
+                                backgroundColor={themeTokens.primary[400]}
                                 display="flex"
                                 alignItems="center"
                                 justifyContent="center"
@@ -175,102 +183,78 @@ function Statistics() {
                         </Grid>
                     </Grid>
 
-                    <Grid xs={12} md={6}>
-                        <Box
-                            backgroundColor={colors.primary[400]}
-                            overflow="auto"
-                            sx={{ height: "300px" }}
-                        >
-                            <Box
-                                display="flex"
-                                justifyContent="space-between"
-                                alignItems="center"
-                                borderBottom={`4px solid ${colors.primary[500]}`}
-                                colors={colors.grey[100]}
-                                p="15px"
-                            >
-                                <Typography
-                                    color={colors.grey[100]}
-                                    variant="h5"
-                                    fontWeight="600"
-                                >
-                                    Đăng kiểm gần đây
-                                </Typography>
-                            </Box>
-                            {mockRegistry.map((registry, i) => (
-                                <Box
-                                    key={`${registry.ID}-${i}`}
-                                    display="flex"
-                                    justifyContent="space-between"
-                                    alignItems="center"
-                                    borderBottom={`4px solid ${colors.primary[500]}`}
-                                    p="15px"
-                                >
-                                    <Box>
-                                        <Typography
-                                            color={colors.greenAccent[500]}
-                                            variant="h5"
-                                            fontWeight="600"
-                                        >
-                                            {registry.ID}
-                                        </Typography>
-                                    </Box>
-                                    <Box color={colors.grey[100]}>
-                                        {registry.center}
-                                    </Box>
-                                    <Box color={colors.grey[100]}>
-                                        {registry.date}
-                                    </Box>
-                                    <Button
-                                        color="secondary"
-                                        variant="contained"
-                                        p="5px 10px"
-                                        borderradius="4px"
-                                        type="submit"
-                                    >
-                                        Xem chi tiết
-                                    </Button>
-                                </Box>
-                            ))}
-                        </Box>
-                    </Grid>
-
-                    <Grid xs={12} md={12}>
-                        <Box
-                            p="0 30px"
-                            backgroundColor={colors.primary[400]}
-                            display="flex "
-                            justifyContent="space-between"
-                            alignItems="center"
-                            height="50px"
-                        >
-                            <Typography
-                                variant="h5"
-                                fontWeight="600"
-                                color={colors.greenAccent[500]}
-                            >
-                                Biểu đồ thống kê và dự báo lượng xe đăng kiểm
-                                của trung tâm
-                            </Typography>
-
-                            <IconButton>
-                                <DownloadOutlinedIcon
-                                    sx={{
-                                        fontSize: "26px",
-                                        color: colors.greenAccent[500],
-                                    }}
-                                />
-                            </IconButton>
-                        </Box>
-                        <Box
-                            height="250px"
-                            m="-20px 0 0 0"
-                            backgroundColor={colors.primary[400]}
-                        >
-                            <LineChart isDashboard={true} />
-                        </Box>
+                    <Grid height="40vh" xs={12} md={6}>
+                        <ResponsiveBar
+                            data={data}
+                            keys={["value"]}
+                            indexBy="month"
+                            margin={{
+                                top: 50,
+                                right: 50,
+                                bottom: 50,
+                                left: 50,
+                            }}
+                            padding={0.3}
+                            valueScale={{ type: "linear" }}
+                            indexScale={{ type: "band", round: true }}
+                            themeTokens={({ index }) => {
+                                // Sử dụng màu sắc từ theme
+                                const colors = [
+                                    themeTokens.blueAccent[300],
+                                    themeTokens.greenAccent[500],
+                                    themeTokens.redAccent[500],
+                                ];
+                                return colors[index % colors.length];
+                            }}
+                            axisTop={null}
+                            axisRight={null}
+                            axisBottom={{
+                                tickSize: 5,
+                                tickPadding: 5,
+                                tickRotation: 0,
+                            }}
+                            axisLeft={{
+                                tickSize: 5,
+                                tickPadding: 5,
+                                tickRotation: 0,
+                            }}
+                            labelSkipWidth={12}
+                            labelSkipHeight={12}
+                            labelTextColor={themeTokens.grey[300]}
+                            borderRadius={5} // Bo góc cho cột
+                            enableGridY={true}
+                            enableLabel={false} // Ẩn nhãn trên cột
+                            theme={{
+                                axis: {
+                                    ticks: {
+                                        text: {
+                                            fontSize: 12,
+                                            fill: "#9E9E9E",
+                                        },
+                                    },
+                                },
+                                tooltip: {
+                                    container: {
+                                        background: themeTokens.primary[900], // Màu nền mặc định của tooltip
+                                        color: themeTokens.grey[300], // Màu chữ
+                                        fontSize: "14px",
+                                    },
+                                },
+                            }}
+                        />
                     </Grid>
                 </Grid>
+            </Box>
+
+            {/* Biểu đồ tròn */}
+            <Box m="20px">
+                <Header
+                    title="Thống kê phân loại"
+                    subtitle="Phân loại xe đã đăng kiểm theo mục đích sử dụng"
+                />
+                <Box height="75vh">
+                    <PieChart />
+                </Box>
             </Box>
         </Box>
     );
